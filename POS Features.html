@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Honda POS v1.0.12 - Complete Feature Documentation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; color: #1e293b; }
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+  .cover { background: linear-gradient(135deg, #0f1923 0%, #1a2d3a 50%, #0f1923 100%); color: white; padding: 80px 60px; text-align: center; border-radius: 20px; margin-bottom: 40px; }
+  .cover .logo { font-size: 64px; margin-bottom: 20px; }
+  .cover h1 { font-size: 48px; font-weight: 800; margin-bottom: 10px; }
+  .cover .subtitle { font-size: 20px; color: #22c55e; font-weight: 600; margin-bottom: 30px; }
+  .cover .badge { display: inline-block; background: #22c55e; color: white; padding: 8px 20px; border-radius: 50px; font-size: 14px; font-weight: 600; margin: 5px; }
+  .cover .meta { margin-top: 30px; color: #94a3b8; font-size: 14px; }
+
+  h2 { font-size: 28px; font-weight: 800; color: #0f1923; margin: 40px 0 15px; padding-bottom: 10px; border-bottom: 3px solid #22c55e; }
+  h3 { font-size: 20px; font-weight: 700; color: #1e293b; margin: 25px 0 10px; }
+  h4 { font-size: 16px; font-weight: 600; color: #374151; margin: 15px 0 8px; }
+  p { color: #4b5563; line-height: 1.7; margin-bottom: 12px; }
+  ul, ol { color: #4b5563; line-height: 1.8; padding-left: 24px; margin-bottom: 12px; }
+  li { margin-bottom: 8px; }
+  code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #dc2626; font-family: 'Courier New', monospace; }
+
+  .card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .card-green { border-left: 4px solid #22c55e; }
+  .card-blue { border-left: 4px solid #3b82f6; }
+  .card-purple { border-left: 4px solid #a855f7; }
+  .card-orange { border-left: 4px solid #f59e0b; }
+  .card-red { border-left: 4px solid #ef4444; }
+  .card-teal { border-left: 4px solid #14b8a6; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  .stat { background: white; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #e2e8f0; }
+  .stat .number { font-size: 36px; font-weight: 800; color: #22c55e; }
+  .stat .label { font-size: 13px; color: #6b7280; margin-top: 4px; }
+
+  .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .feature-item { background: #f8fafc; border-radius: 12px; padding: 12px 16px; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 10px; }
+  .feature-item .icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .feature-item .text { font-size: 13px; font-weight: 500; color: #374151; }
+
+  .highlight-box { background: linear-gradient(135deg, #dcfce7, #f0fdf4); border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .highlight-box h4 { color: #166534; margin-bottom: 8px; }
+  .highlight-box p, .highlight-box li { color: #15803d; }
+
+  .warning-box { background: linear-gradient(135deg, #fef3c7, #fffbeb); border: 1px solid #fde68a; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .warning-box h4 { color: #92400e; margin-bottom: 8px; }
+  .warning-box p, .warning-box li { color: #78350f; }
+
+  .diagram-box { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; margin-bottom: 20px; text-align: center; }
+  .diagram-box svg { max-width: 100%; height: auto; }
+  .diagram-caption { font-size: 12px; color: #6b7280; margin-top: 10px; font-style: italic; }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  th { background: #0f1923; color: white; padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; }
+  td { padding: 10px 16px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #4b5563; }
+  tr:hover td { background: #f8fafc; }
+
+  .toc { background: white; border-radius: 16px; padding: 30px; border: 1px solid #e2e8f0; margin-bottom: 40px; }
+  .toc h3 { color: #0f1923; margin-bottom: 15px; }
+  .toc-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; }
+  .toc-item:last-child { border-bottom: none; }
+  .toc-item .toc-num { background: #22c55e; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-right: 12px; flex-shrink: 0; }
+  .toc-item a { color: #374151; text-decoration: none; font-weight: 500; font-size: 14px; }
+
+  .page-break { page-break-before: always; margin-top: 60px; }
+  .print-btn { position: fixed; bottom: 30px; right: 30px; background: #22c55e; color: white; border: none; padding: 14px 24px; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 24px rgba(34,197,94,0.4); z-index: 100; }
+  .print-btn:hover { background: #16a34a; transform: translateY(-2px); }
+
+  @media print {
+    body { background: white; }
+    .page { padding: 20px; }
+    .cover { break-inside: avoid; }
+    h2 { break-before: page; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨 Print / Save as PDF</button>
+
+<div class="page">
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="logo">🏍️</div>
+  <h1>Honda POS</h1>
+  <div class="subtitle">Complete Honda POS System — Feature Documentation</div>
+  <div>
+    <span class="badge">v1.0.12</span>
+    <span class="badge">React 19 + Vite 7</span>
+    <span class="badge">FIFO Batch Tracking</span>
+    <span class="badge">Electron Desktop</span>
+  </div>
+  <div class="meta">
+    <p>Generated: July 2026 | Stack: React + TypeScript + TailwindCSS 4 + Electron 33</p>
+    <p>Target: Desktop POS for motorcycle parts & service retail with FIFO inventory costing & customer credit tracking</p>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h3>📋 Contents</h3>
+  <div class="toc-item"><div class="toc-num">1</div><a href="#pos">Point of Sale (POS)</a></div>
+  <div class="toc-item"><div class="toc-num">2</div><a href="#products">Products Management</a></div>
+  <div class="toc-item"><div class="toc-num">3</div><a href="#batches">FIFO Batch Tracking (New)</a></div>
+  <div class="toc-item"><div class="toc-num">4</div><a href="#inventory">Inventory Tracking</a></div>
+  <div class="toc-item"><div class="toc-num">5</div><a href="#customers">Customer Management &amp; Udhar</a></div>
+  <div class="toc-item"><div class="toc-num">6</div><a href="#reports">Reports &amp; Analytics</a></div>
+  <div class="toc-item"><div class="toc-num">7</div><a href="#settings">Settings, Backup &amp; Restore</a></div>
+  <div class="toc-item"><div class="toc-num">8</div><a href="#architecture">System Architecture &amp; Data Flow</a></div>
+  <div class="toc-item"><div class="toc-num">9</div><a href="#tech">Technical Specifications</a></div>
+</div>
+
+<!-- SECTION 1: POS PAGE -->
+<h2 id="pos">§1 Point of Sale (POS) — Billing &amp; Checkout</h2>
+
+<div class="highlight-box">
+  <h4>✅ Core POS Features</h4>
+  <ul>
+    <li><strong>Real-time product search:</strong> Search by name or category, filters live as you type</li>
+    <li><strong>Barcode/QR scanner support:</strong> USB HID scanner emulates keyboard input (plug &amp; play, no drivers)</li>
+    <li><strong>6-column product grid:</strong> Display products with emoji/image, batch-linked selling price, and stock status (color-coded)</li>
+    <li><strong>Shopping cart (persistent):</strong> Cart items remain after completing a sale — you can keep selling OR clear manually with red button</li>
+    <li><strong>Editable quantity &amp; price:</strong> Click quantity or price in cart to edit on-the-fly. Qty edits have stock limits. Price edits show strikethrough for original</li>
+  </ul>
+</div>
+
+<div class="card card-teal">
+  <h4>🧮 Batch-Aware Pricing (New)</h4>
+  <ul>
+    <li><strong>Oldest-batch price display:</strong> Product grid pulls selling price from the oldest available batch (FIFO order), not a fixed product price</li>
+    <li><strong>Automatic fallback:</strong> If no batch exists for a product, the product's base <code>sellingPrice</code> is used instead</li>
+    <li><strong>Cart consistency:</strong> When added to cart, each item locks in the batch-derived price at the moment of adding</li>
+  </ul>
+</div>
+
+<div class="card card-green">
+  <h4>💳 Payment &amp; Checkout</h4>
+  <ul>
+    <li><strong>Full payment (cash only):</strong> Enter amount, automatic change calculation</li>
+    <li><strong>Partial payment with customer credit:</strong> If customer linked: pay less than total → remaining goes to customer's udhar. Error only shown if NO customer linked</li>
+    <li><strong>Zero amount entry (full credit):</strong> No amount entered + customer linked = full bill becomes udhar</li>
+    <li><strong>Optional customer linking:</strong> Button "Link to Customer (Udhar/Credit)" opens customer picker with favorites at top</li>
+    <li><strong>Auto stock deduction:</strong> Stock reduces after every sale instantly, consumed from the oldest batch first (FIFO)</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>📄 Receipt Generation</h4>
+  <ul>
+    <li><strong>Invoice design:</strong> Shop name (custom font, always black &amp; bold 900), Invoice badge, address, phone, date/time</li>
+    <li><strong>Item table:</strong> Description, Price, Qty, Total (with bold toggle for items)</li>
+    <li><strong>Discount display:</strong> Shows discount % and amount with bold toggle option</li>
+    <li><strong>Custom labels:</strong> "Credit (Udhar)" text is customizable in settings (can be "Baqi", "Remaining", anything)</li>
+    <li><strong>Bold credit label option:</strong> When ON: 17px font, 900 weight, red border separator (like total line). When OFF: 13px, normal weight</li>
+    <li><strong>Terms &amp; Conditions:</strong> Optional T&amp;C block at bottom with bold toggle</li>
+    <li><strong>Footer message:</strong> Custom shop sign-off (custom font, always bold 900, black)</li>
+    <li><strong>Print button:</strong> Opens print dialog, receipt formatted for thermal printer (80mm width)</li>
+  </ul>
+</div>
+
+<div class="card card-orange">
+  <h4>⌨️ Keyboard Shortcuts &amp; Interactions</h4>
+  <ul>
+    <li><strong>F11:</strong> Toggle fullscreen mode (useful for kiosk setup)</li>
+    <li><strong>Barcode input:</strong> Green-bordered field auto-focuses, Enter-key triggers product add</li>
+    <li><strong>Click quantity:</strong> Turns into editable input (starts empty, shows current as placeholder)</li>
+    <li><strong>Click price:</strong> Turns into editable input for custom pricing</li>
+    <li><strong>Escape key:</strong> Cancels qty/price edits, reverts to previous value</li>
+    <li><strong>Sliding cart:</strong> ChevronRight in cart header hides it. Green cart button appears in search bar to show it again</li>
+  </ul>
+</div>
+
+<!-- SECTION 2: PRODUCTS PAGE -->
+<div class="page-break"></div>
+<h2 id="products">§2 Products Management</h2>
+
+<div class="card card-green">
+  <h4>📦 Product CRUD &amp; Organization</h4>
+  <ul>
+    <li><strong>Add new products:</strong> Name, barcode (QR/code39), category, unit (pieces/boxes/strips), emoji/image, cost price, selling price</li>
+    <li><strong>Image upload:</strong> Auto-resizes to 400px, compresses to JPEG 0.85 quality</li>
+    <li><strong>Edit products:</strong> Modify any field, changes apply instantly</li>
+    <li><strong>Delete products:</strong> With confirmation dialog (data safety)</li>
+    <li><strong>Drag-and-drop reordering:</strong> GripVertical handle visible on each product card, disabled during search/filter</li>
+    <li><strong>Category management:</strong> Create/edit/delete categories from "Manage Categories" modal</li>
+    <li><strong>Stock display:</strong> Color-coded: Green (&gt;20), Orange (≤20), Red (0/out of stock)</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>🔍 Search &amp; Filtering</h4>
+  <ul>
+    <li><strong>Real-time search:</strong> By product name or barcode</li>
+    <li><strong>Category filter:</strong> Dropdown to filter by category, "All" shows everything</li>
+    <li><strong>Profit calculation:</strong> Shows profit per unit = selling price − cost price. Visible in product detail modal</li>
+    <li><strong>Barcode input field:</strong> Scan to add product directly to cart without navigating to POS page</li>
+  </ul>
+</div>
+
+<div class="card card-purple">
+  <h4>💾 Data Persistence</h4>
+  <ul>
+    <li>All products stored in <code>localStorage</code> under <code>pharma_products</code></li>
+    <li>Order preserved through drag-and-drop (saved immediately after reorder)</li>
+    <li>Stock changes persist across sessions, kept in sync with batch quantities</li>
+  </ul>
+</div>
+
+<!-- SECTION 3: BATCHES (FIFO) -->
+<div class="page-break"></div>
+<h2 id="batches">§3 FIFO Batch Tracking (New in v1.0.12)</h2>
+
+<div class="highlight-box">
+  <h4>✨ Why Batch Tracking</h4>
+  <ul>
+    <li>Products purchased at different times often have different cost and selling prices</li>
+    <li>FIFO (First-In-First-Out) ensures the oldest stock is sold first — matching real retail practice, especially for stock with limited shelf life</li>
+    <li>Each sale's profit is calculated against the <strong>actual cost</strong> of the batch it was drawn from, not an average or a single fixed cost</li>
+  </ul>
+</div>
+
+<div class="card card-green">
+  <h4>📥 Adding a Batch</h4>
+  <ul>
+    <li><strong>Batch fields:</strong> Product, quantity, cost price, selling price, purchase date, optional expiry date, batch number, vendor name, notes</li>
+    <li><strong>Auto stock sync:</strong> Adding a batch automatically increases the linked product's total stock quantity</li>
+    <li><strong>Multiple batches per product:</strong> A single product can have many active batches queued in purchase order</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>📤 FIFO Consumption on Sale</h4>
+  <ul>
+    <li><strong>Oldest-first logic:</strong> When a sale is completed, quantity is deducted from the oldest batch with available stock first, then the next-oldest if the first runs out</li>
+    <li><strong>Consumption record:</strong> Each deduction is logged — batch ID, product ID, quantity taken, cost price at time of sale, selling price, linked sale ID</li>
+    <li><strong>Accurate profit:</strong> Profit per sale = Σ (selling price − actual batch cost price) × qty consumed from each batch</li>
+  </ul>
+</div>
+
+<div class="card card-purple">
+  <h4>💰 Batch Selling Price on POS</h4>
+  <ul>
+    <li>The POS product grid displays the selling price of the <strong>oldest available batch</strong> — the one that will actually be sold next</li>
+    <li>Falls back to the product's base selling price if no batch stock remains</li>
+  </ul>
+</div>
+
+<div class="warning-box">
+  <h4>⚠️ Batch Deletion &amp; Archiving (Planned)</h4>
+  <ul>
+    <li>Deleting a batch outright can break historical profit calculations if that batch was already sold from — its cost reference disappears from past sales</li>
+    <li>Safer options under consideration: <strong>archiving</strong> a depleted/unwanted batch (hides it from active inventory but keeps it for profit history), or a <strong>write-off</strong> function to reduce quantity for damage/expiry while preserving the cost trail</li>
+    <li>Only batches with zero remaining quantity and zero linked sales history are safe to fully delete</li>
+  </ul>
+</div>
+
+<div class="diagram-box">
+  <svg viewBox="0 0 820 380" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="820" height="380" fill="white"/>
+    <!-- Title -->
+    <text x="410" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#0f1923">FIFO Batch Consumption Flow</text>
+
+    <!-- Batch queue boxes -->
+    <rect x="30" y="70" width="150" height="70" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="105" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">Batch 1 (Oldest)</text>
+    <text x="105" y="116" text-anchor="middle" font-size="11" fill="#166534">Cost: Rs 10 | Qty: 5</text>
+
+    <rect x="210" y="70" width="150" height="70" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="285" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">Batch 2</text>
+    <text x="285" y="116" text-anchor="middle" font-size="11" fill="#92400e">Cost: Rs 12 | Qty: 20</text>
+
+    <rect x="390" y="70" width="150" height="70" rx="10" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="465" y="98" text-anchor="middle" font-size="12" font-weight="700" fill="#3730a3">Batch 3 (Newest)</text>
+    <text x="465" y="116" text-anchor="middle" font-size="11" fill="#3730a3">Cost: Rs 14 | Qty: 30</text>
+
+    <!-- arrow down to sale -->
+    <line x1="105" y1="140" x2="105" y2="190" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="285" y1="140" x2="285" y2="190" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4"/>
+
+    <!-- Sale event -->
+    <rect x="30" y="200" width="330" height="60" rx="10" fill="#0f1923"/>
+    <text x="195" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="white">Sale: Customer buys 8 units</text>
+    <text x="195" y="244" text-anchor="middle" font-size="11" fill="#94a3b8">Consume oldest batch first, then next</text>
+
+    <!-- Result boxes -->
+    <rect x="30" y="290" width="230" height="70" rx="10" fill="white" stroke="#22c55e" stroke-width="2"/>
+    <text x="145" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">5 units from Batch 1</text>
+    <text x="145" y="330" text-anchor="middle" font-size="11" fill="#4b5563">Cost recorded: Rs 10 each</text>
+    <text x="145" y="346" text-anchor="middle" font-size="11" fill="#4b5563">Batch 1 now empty</text>
+
+    <rect x="280" y="290" width="230" height="70" rx="10" fill="white" stroke="#f59e0b" stroke-width="2"/>
+    <text x="395" y="312" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">3 units from Batch 2</text>
+    <text x="395" y="330" text-anchor="middle" font-size="11" fill="#4b5563">Cost recorded: Rs 12 each</text>
+    <text x="395" y="346" text-anchor="middle" font-size="11" fill="#4b5563">Batch 2 has 17 left</text>
+
+    <rect x="540" y="200" width="250" height="160" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+    <text x="665" y="224" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">Profit Calculation</text>
+    <text x="665" y="248" text-anchor="middle" font-size="11" fill="#166534">(SP − Rs10) × 5 units</text>
+    <text x="665" y="266" text-anchor="middle" font-size="11" fill="#166534">+ (SP − Rs12) × 3 units</text>
+    <text x="665" y="290" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">= Accurate true profit</text>
+    <text x="665" y="316" text-anchor="middle" font-size="10" fill="#4b5563">Not a flat average cost —</text>
+    <text x="665" y="332" text-anchor="middle" font-size="10" fill="#4b5563">reflects exact batches sold</text>
+
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#22c55e"/>
+      </marker>
+    </defs>
+  </svg>
+  <div class="diagram-caption">Sale of 8 units draws first from the oldest batch, then spills into the next batch — each portion keeps its own recorded cost.</div>
+</div>
+
+<!-- SECTION 4: INVENTORY PAGE -->
+<div class="page-break"></div>
+<h2 id="inventory">§4 Inventory Tracking</h2>
+
+<div class="card card-green">
+  <h4>📊 Stock Monitoring</h4>
+  <ul>
+    <li><strong>Visual progress bars:</strong> Green bar shows current stock as % of warehouse capacity</li>
+    <li><strong>Stock levels:</strong> Displays current qty, restock trigger threshold (configurable in settings)</li>
+    <li><strong>Low stock alerts:</strong> Items below threshold highlighted in orange/red (visual alert), with a popup shown on the first bill after opening the app</li>
+    <li><strong>Color coding:</strong> Green (sufficient), Yellow (approaching limit), Red (below threshold)</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>🔄 Restocking</h4>
+  <ul>
+    <li><strong>Restock modal:</strong> Enter quantity to add, optional purchase cost (for tracking spending)</li>
+    <li><strong>Batch-based restocking:</strong> Each restock can be entered as a new batch, preserving its own cost and selling price for FIFO</li>
+    <li><strong>Auto-update:</strong> Stock updates instantly across all pages (POS, reports, products, batches)</li>
+  </ul>
+</div>
+
+<div class="card card-orange">
+  <h4>📋 Inventory Reports</h4>
+  <ul>
+    <li><strong>Stock summary:</strong> Total items, items in stock, low stock count</li>
+    <li><strong>Average stock value:</strong> Total cost of inventory, calculated from live batch quantities</li>
+    <li><strong>Stock turnover:</strong> Items sold this month vs avg sell rate</li>
+  </ul>
+</div>
+
+<!-- SECTION 5: CUSTOMERS PAGE -->
+<div class="page-break"></div>
+<h2 id="customers">§5 Customer Management &amp; Udhar (Credit) Tracking</h2>
+
+<div class="highlight-box">
+  <h4>✨ Customer Features</h4>
+  <ul>
+    <li>Complete customer profile system with purchase history &amp; credit tracking</li>
+    <li>Support for partial payments and manual debt addition</li>
+    <li>Automatic pending amount calculation with formula transparency</li>
+    <li>Print customer statements for record-keeping</li>
+  </ul>
+</div>
+
+<div class="card card-green">
+  <h4>👥 Customer List &amp; Management</h4>
+  <ul>
+    <li><strong>Customer profiles:</strong> Name, phone, address (optional), favorite toggle</li>
+    <li><strong>Favorite customers:</strong> Quick access at top of list, visible in POS customer picker</li>
+    <li><strong>Search &amp; filter:</strong> Search by name or phone number, filter favorites only</li>
+    <li><strong>KPI row:</strong> Total customers, customers with pending udhar, total pending amount (all customers)</li>
+    <li><strong>Customer card displays:</strong> Total spent, sales count, pending amount with color badge</li>
+    <li><strong>Edit/Delete:</strong> Modify customer details or remove from system (sales remain in reports)</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>💰 Pending Amount (Udhar) Calculation</h4>
+  <ul>
+    <li><strong>Formula:</strong> Pending = Total Billed − Amount Paid at Sale − Manual Payments + Manual Dues Added</li>
+    <li><strong>Visual formula bar:</strong> Shows exact calculation on customer detail page for transparency</li>
+    <li><strong>Color-coded status:</strong> Green (Clear), Yellow (&lt;1000 pending), Red (≥1000 pending)</li>
+    <li><strong>Automatic calculation:</strong> Recalculates after every payment/due entry</li>
+    <li><strong>Display format:</strong> Shows amount in currency or "✓ Clear" if zero</li>
+  </ul>
+</div>
+
+<div class="card card-purple">
+  <h4>📊 Customer Detail View</h4>
+  <ul>
+    <li><strong>Profile header:</strong> Customer name, phone, address, customer since date, favorite star</li>
+    <li><strong>KPI tiles (4):</strong> Total Billed, Total Received (paid at sale + manual payments), Dues Added, Pending (Udhar)</li>
+    <li><strong>Alert banner:</strong> Red (if pending) or Green (if all paid) with action buttons</li>
+    <li><strong>Two tabs:</strong> Purchase History &amp; Payment Ledger</li>
+  </ul>
+</div>
+
+<div class="card card-orange">
+  <h4>🧾 Purchase History Tab</h4>
+  <ul>
+    <li><strong>All sales linked to customer:</strong> Date, time, transaction ID, items purchased, total, amount paid, status (Paid/Credit/Partial)</li>
+    <li><strong>Discount display:</strong> Shows discount amount if any</li>
+    <li><strong>Due tracking:</strong> Shows remaining due for each sale if not fully paid</li>
+    <li><strong>Sorted by date:</strong> Most recent first</li>
+  </ul>
+</div>
+
+<div class="card card-red">
+  <h4>💳 Payment Ledger Tab (Combined)</h4>
+  <ul>
+    <li><strong>Payment entries:</strong> Money received from customer (minus icon, green)</li>
+    <li><strong>Due entries:</strong> Manual debts added (plus icon, orange)</li>
+    <li><strong>Each entry shows:</strong> Date, time, amount, type (Payment/Due), notes, delete button</li>
+    <li><strong>Timeline view:</strong> Sorted newest first, complete history of all transactions</li>
+  </ul>
+</div>
+
+<div class="card card-green">
+  <h4>➕ Record Payment &amp; Add Due Buttons</h4>
+  <ul>
+    <li><strong>Record Payment:</strong> Modal to enter amount received from customer, optional notes (e.g., "Paid full", "Partial")</li>
+    <li><strong>Quick buttons:</strong> "Full" button (auto-fill pending amount), "Half" button (auto-fill 50%)</li>
+    <li><strong>Add Manual Due:</strong> Modal to add debt not from a sale (old udhar, loan, etc.)</li>
+    <li><strong>Both modals:</strong> Have note field for documenting reason/reference</li>
+    <li><strong>Mode switcher:</strong> Tab switcher inside modal to toggle between Record Payment and Add Due</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>🖨 Print Customer Statement</h4>
+  <ul>
+    <li><strong>Print button:</strong> Top-right of customer detail page</li>
+    <li><strong>Statement includes:</strong> Customer name, phone, address, customer since date</li>
+    <li><strong>Summary KPIs:</strong> Total billed, total received, manual dues added</li>
+    <li><strong>Outstanding balance box:</strong> Red highlighted if pending, green highlighted if clear</li>
+    <li><strong>Full tables:</strong> All purchases (with due status), all payment/due entries</li>
+    <li><strong>Print formatting:</strong> A4 landscape, ready for direct print or PDF save</li>
+  </ul>
+</div>
+
+<!-- SECTION 6: REPORTS PAGE -->
+<div class="page-break"></div>
+<h2 id="reports">§6 Reports &amp; Analytics</h2>
+
+<div class="card card-green">
+  <h4>📊 Overview Tab</h4>
+  <ul>
+    <li><strong>Period selector:</strong> Daily / Weekly / Monthly buttons to switch chart view</li>
+    <li><strong>Product filter:</strong> Dropdown to filter reports by specific product</li>
+    <li><strong>Revenue chart:</strong> Bar chart showing revenue for last 7 days (daily), 6 weeks (weekly), or 6 months (monthly)</li>
+    <li><strong>Top Selling Products:</strong> Horizontal progress bars showing units sold (top 6 products)</li>
+    <li><strong>Revenue by Category:</strong> Horizontal progress bars showing revenue per category (top 6)</li>
+    <li><strong>Summary grid:</strong> Total sales, gross revenue, total discounts, net revenue, avg order value, total items sold</li>
+  </ul>
+</div>
+
+<div class="card card-teal">
+  <h4>💵 FIFO-Accurate Profit</h4>
+  <ul>
+    <li>Profit figures pull from the batch consumption log (<code>pharma_batch_consumptions</code>) rather than a single fixed cost per product</li>
+    <li>Each sale's line item profit = (selling price − actual batch cost) summed across every batch portion consumed</li>
+    <li>Gives a realistic view of margins when purchase costs fluctuate between restocks</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>🧾 Transactions Tab</h4>
+  <ul>
+    <li><strong>Transaction list:</strong> All sales as clickable cards showing TXN ID, date/time, items count, total, pending (if any)</li>
+    <li><strong>Status badge:</strong> Green checkmark if paid, red clock if unpaid/pending</li>
+    <li><strong>Customer tag:</strong> Shows customer name if linked (blue badge)</li>
+    <li><strong>Action buttons:</strong> Eye (view details), Edit, Print, Delete</li>
+  </ul>
+</div>
+
+<div class="card card-purple">
+  <h4>🔍 Filtering &amp; Sorting</h4>
+  <ul>
+    <li><strong>Product filter:</strong> Dropdown to show only sales of specific product</li>
+    <li><strong>Date range:</strong> "From" and "To" date pickers (calendar inputs)</li>
+    <li><strong>Clear all filters:</strong> Button to reset all filters at once</li>
+    <li><strong>Count display:</strong> Shows filtered transaction count at top</li>
+  </ul>
+</div>
+
+<div class="card card-orange">
+  <h4>👁 View Transaction Details</h4>
+  <ul>
+    <li><strong>Modal popup:</strong> Shows full invoice layout (shop name, address, phone, date/time, items table, totals)</li>
+    <li><strong>Item details:</strong> Product name, price per unit, quantity, line total</li>
+    <li><strong>Calculation row:</strong> Sub-total, discount, total, paid amount, change, credit (if any)</li>
+    <li><strong>Action buttons:</strong> Edit, Print, Delete right in the modal header</li>
+  </ul>
+</div>
+
+<div class="card card-red">
+  <h4>✏️ Edit Transaction</h4>
+  <ul>
+    <li><strong>Edit fields:</strong> Discount % and Amount Paid only (items cannot be modified)</li>
+    <li><strong>Recalculation:</strong> Totals and change auto-calculate as you edit</li>
+    <li><strong>Note:</strong> Stock levels are NOT restored when editing — manual restock if needed</li>
+  </ul>
+</div>
+
+<div class="card card-green">
+  <h4>📥 Export &amp; Reset</h4>
+  <ul>
+    <li><strong>Export CSV (green button):</strong> Download all transactions as CSV file (TXN ID, date, time, qty, amounts)</li>
+    <li><strong>Reset Reports:</strong> Permanently delete ALL sales data (requires double confirmation)</li>
+  </ul>
+</div>
+
+<!-- SECTION 7: SETTINGS PAGE -->
+<div class="page-break"></div>
+<h2 id="settings">§7 Settings, Backup &amp; Restore</h2>
+
+<div class="card card-green">
+  <h4>🏪 Shop Information</h4>
+  <ul>
+    <li><strong>Shop logo:</strong> Uploadable, auto-resized, printed above shop name on receipt</li>
+    <li><strong>Shop name:</strong> Displayed on all receipts, settings, POS header</li>
+    <li><strong>Phone number:</strong> Shown on receipts</li>
+    <li><strong>Address:</strong> Shown on receipts with bold toggle option</li>
+    <li><strong>GSTIN &amp; currency:</strong> Configurable tax ID and currency symbol</li>
+  </ul>
+</div>
+
+<div class="card card-blue">
+  <h4>🧾 Receipt Formatting &amp; Fonts</h4>
+  <ul>
+    <li><strong>Shop name font:</strong> Dropdown (Pacifico, Lobster, Great Vibes, Playfair Display, Poppins, Bebas Neue, Dancing Script, Caveat)</li>
+    <li><strong>Body font:</strong> Dropdown for item descriptions and text</li>
+    <li><strong>Footer font:</strong> Dropdown for shop sign-off message</li>
+    <li><strong>Footer text:</strong> Custom message printed at bottom of receipt (e.g., "Thank You!", shop tagline)</li>
+    <li><strong>Terms &amp; Conditions:</strong> Multi-line text field, printed at bottom of receipt</li>
+  </ul>
+</div>
+
+<div class="card card-purple">
+  <h4>🖨 Thermal Printer Boldness (Receipt Bold Options)</h4>
+  <ul>
+    <li><strong>Bold Address / Phone / Date &amp; Time / Discount / Terms:</strong> Independent toggles for each receipt section</li>
+    <li><strong>Bold Credit/Udhar Label:</strong> When ON: 17px font, 900 weight, red border. When OFF: 13px, normal weight</li>
+    <li><strong>Bold Item Rows:</strong> When ON: product name, price, qty, total all print bold and black</li>
+    <li><strong>Note:</strong> Shop name and footer are ALWAYS bold &amp; black automatically</li>
+  </ul>
+</div>
+
+<div class="card card-orange">
+  <h4>💳 POS Settings</h4>
+  <ul>
+    <li><strong>Enable Discount:</strong> Toggle to show/hide discount selector at checkout</li>
+    <li><strong>Enable GST:</strong> Toggle to include/exclude GST calculation in totals</li>
+    <li><strong>Cart font size:</strong> Dropdown (Small, Medium, Large, Extra Large) with live preview</li>
+    <li><strong>Low stock threshold &amp; alert toggle:</strong> Configure trigger quantity and enable/disable the pop-up</li>
+  </ul>
+</div>
+
+<div class="card card-red">
+  <h4>💰 Credit Label Customization</h4>
+  <ul>
+    <li><strong>Credit/Udhar Label:</strong> Text input field to customize the label on receipts</li>
+    <li><strong>Default:</strong> "Credit (Udhar)"</li>
+    <li><strong>Examples:</strong> Can be "Baqi", "Baki Raham", "Remaining", anything you prefer</li>
+    <li><strong>Applied to:</strong> All receipts (printed, modal, PDF) and customer statement</li>
+  </ul>
+</div>
+
+<div class="highlight-box">
+  <h4>💾 Backup &amp; Restore — Full Data Coverage (Updated)</h4>
+  <ul>
+    <li><strong>Backup Now (JSON):</strong> Downloads a complete snapshot of every data table in one file</li>
+    <li><strong>Included in backup:</strong> Products, Categories, Units, Sales, Customers, <strong>Batches</strong>, <strong>Batch Consumptions</strong>, and Settings</li>
+    <li><strong>Restore Backup:</strong> Upload a previous backup file to replace the entire local database — a two-step confirmation prevents accidental data loss</li>
+    <li><strong>Cross-device migration:</strong> Backup on one PC, restore on another — batches and customer/udhar records now travel with the file (previously only products/sales/settings were included)</li>
+    <li><strong>Export to Excel:</strong> Creates a multi-sheet .xlsx file (Products, Sales, Sale Items, Categories, Units, Settings) for accountants</li>
+    <li><strong>Note:</strong> All data lives in browser localStorage inside the Electron app's AppData folder — backups are the only way to move data between machines</li>
+  </ul>
+</div>
+
+<div class="diagram-box">
+  <svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="820" height="300" fill="white"/>
+    <text x="410" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f1923">Backup &amp; Restore Data Flow</text>
+
+    <!-- localStorage source -->
+    <rect x="30" y="60" width="200" height="180" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+    <text x="130" y="82" text-anchor="middle" font-size="12" font-weight="700" fill="#0f1923">Device A localStorage</text>
+    <text x="50" y="106" font-size="10" fill="#4b5563">pharma_products</text>
+    <text x="50" y="124" font-size="10" fill="#4b5563">pharma_categories</text>
+    <text x="50" y="142" font-size="10" fill="#4b5563">pharma_units</text>
+    <text x="50" y="160" font-size="10" fill="#4b5563">pharma_sales</text>
+    <text x="50" y="178" font-size="10" fill="#22c55e" font-weight="700">pharma_customers ★</text>
+    <text x="50" y="196" font-size="10" fill="#22c55e" font-weight="700">pharma_batches ★</text>
+    <text x="50" y="214" font-size="10" fill="#22c55e" font-weight="700">pharma_batch_consumptions ★</text>
+
+    <!-- arrow to backup -->
+    <line x1="230" y1="150" x2="320" y2="150" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow2)"/>
+    <text x="275" y="140" text-anchor="middle" font-size="10" fill="#166534">Backup Now</text>
+
+    <!-- JSON file -->
+    <rect x="330" y="100" width="160" height="100" rx="10" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="410" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">hondapos_backup</text>
+    <text x="410" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">_2026-xx-xx.json</text>
+    <text x="410" y="180" text-anchor="middle" font-size="10" fill="#166534">Complete snapshot</text>
+
+    <!-- arrow to device B -->
+    <line x1="490" y1="150" x2="580" y2="150" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow2)"/>
+    <text x="535" y="140" text-anchor="middle" font-size="10" fill="#1e40af">Restore Backup</text>
+
+    <!-- Device B -->
+    <rect x="590" y="60" width="200" height="180" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+    <text x="690" y="82" text-anchor="middle" font-size="12" font-weight="700" fill="#0f1923">Device B localStorage</text>
+    <text x="610" y="106" font-size="10" fill="#4b5563">All tables restored</text>
+    <text x="610" y="124" font-size="10" fill="#4b5563">including customers,</text>
+    <text x="610" y="142" font-size="10" fill="#4b5563">batches &amp; consumption</text>
+    <text x="610" y="160" font-size="10" fill="#4b5563">history — profit stays</text>
+    <text x="610" y="178" font-size="10" fill="#4b5563">accurate after move</text>
+
+    <defs>
+      <marker id="arrow2" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#3b82f6"/>
+      </marker>
+    </defs>
+  </svg>
+  <div class="diagram-caption">★ marks the tables added in this update — customer/udhar records and FIFO batch data now included in every backup and restore cycle.</div>
+</div>
+
+<!-- SECTION 8: ARCHITECTURE -->
+<div class="page-break"></div>
+<h2 id="architecture">§8 System Architecture &amp; Data Flow</h2>
+
+<div class="diagram-box">
+  <svg viewBox="0 0 820 360" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="820" height="360" fill="white"/>
+    <text x="410" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f1923">Application Architecture</text>
+
+    <!-- Electron shell -->
+    <rect x="20" y="50" width="780" height="290" rx="14" fill="#f8fafc" stroke="#0f1923" stroke-width="2" stroke-dasharray="6,4"/>
+    <text x="40" y="72" font-size="11" font-weight="700" fill="#0f1923">Electron Desktop Shell (Windows 10/11)</text>
+
+    <!-- React app -->
+    <rect x="50" y="90" width="340" height="230" rx="10" fill="white" stroke="#3b82f6" stroke-width="2"/>
+    <text x="220" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">React 19 + TypeScript UI</text>
+
+    <rect x="70" y="126" width="140" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="140" y="147" text-anchor="middle" font-size="10" fill="#3730a3">POS Page</text>
+
+    <rect x="220" y="126" width="140" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="290" y="147" text-anchor="middle" font-size="10" fill="#3730a3">Products Page</text>
+
+    <rect x="70" y="168" width="140" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="140" y="189" text-anchor="middle" font-size="10" fill="#3730a3">Batches Page (FIFO)</text>
+
+    <rect x="220" y="168" width="140" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="290" y="189" text-anchor="middle" font-size="10" fill="#3730a3">Inventory Page</text>
+
+    <rect x="70" y="210" width="140" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="140" y="231" text-anchor="middle" font-size="10" fill="#3730a3">Customers Page</text>
+
+    <rect x="220" y="210" width="140" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="290" y="231" text-anchor="middle" font-size="10" fill="#3730a3">Reports Page</text>
+
+    <rect x="70" y="252" width="290" height="34" rx="6" fill="#e0e7ff"/>
+    <text x="215" y="273" text-anchor="middle" font-size="10" fill="#3730a3">Settings Page (Backup / Restore / Export)</text>
+
+    <rect x="70" y="294" width="290" height="16" rx="4" fill="#c7d2fe"/>
+    <text x="215" y="306" text-anchor="middle" font-size="9" fill="#312e81">Sidebar Navigation + Low-Stock Popup</text>
+
+    <!-- Store layer -->
+    <rect x="430" y="90" width="180" height="230" rx="10" fill="white" stroke="#22c55e" stroke-width="2"/>
+    <text x="520" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">store/db.ts</text>
+    <text x="520" y="132" text-anchor="middle" font-size="10" fill="#4b5563">Product / Sale / Customer</text>
+    <text x="520" y="148" text-anchor="middle" font-size="10" fill="#4b5563">CRUD functions</text>
+    <text x="520" y="168" text-anchor="middle" font-size="10" fill="#4b5563">restoreFromBackup()</text>
+    <text x="520" y="186" text-anchor="middle" font-size="10" fill="#4b5563">getSettings() / saveSettings()</text>
+    <rect x="450" y="205" width="140" height="1" fill="#e2e8f0"/>
+    <text x="520" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#166534"></text>
+    <text x="520" y="228" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">store/batch-fifo.ts</text>
+    <text x="520" y="248" text-anchor="middle" font-size="10" fill="#4b5563">addProductBatch()</text>
+    <text x="520" y="264" text-anchor="middle" font-size="10" fill="#4b5563">consumeProductBatches()</text>
+    <text x="520" y="280" text-anchor="middle" font-size="10" fill="#4b5563">calculateProfitFIFO()</text>
+    <text x="520" y="296" text-anchor="middle" font-size="10" fill="#4b5563">getProductBatchSellingPrice()</text>
+
+    <!-- localStorage -->
+    <rect x="630" y="90" width="150" height="230" rx="10" fill="#0f1923"/>
+    <text x="705" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="white">Browser</text>
+    <text x="705" y="132" text-anchor="middle" font-size="12" font-weight="700" fill="white">localStorage</text>
+    <text x="650" y="158" font-size="9" fill="#94a3b8">pharma_products</text>
+    <text x="650" y="174" font-size="9" fill="#94a3b8">pharma_sales</text>
+    <text x="650" y="190" font-size="9" fill="#94a3b8">pharma_customers</text>
+    <text x="650" y="206" font-size="9" fill="#94a3b8">pharma_payments</text>
+    <text x="650" y="222" font-size="9" fill="#94a3b8">pharma_batches</text>
+    <text x="650" y="238" font-size="9" fill="#94a3b8">pharma_batch_</text>
+    <text x="650" y="252" font-size="9" fill="#94a3b8">consumptions</text>
+    <text x="650" y="270" font-size="9" fill="#94a3b8">pharma_settings</text>
+    <text x="650" y="290" font-size="9" fill="#22c55e">(persists in AppData</text>
+    <text x="650" y="304" font-size="9" fill="#22c55e">even after reinstall)</text>
+
+    <!-- arrows -->
+    <line x1="390" y1="200" x2="430" y2="200" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow3)"/>
+    <line x1="610" y1="200" x2="630" y2="200" stroke="#0f1923" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <defs>
+      <marker id="arrow3" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#0f1923"/>
+      </marker>
+    </defs>
+  </svg>
+  <div class="diagram-caption">React pages call into two store modules — general CRUD (db.ts) and FIFO batch logic (batch-fifo.ts) — both persisting to browser localStorage inside the Electron shell.</div>
+</div>
+
+<div class="diagram-box">
+  <svg viewBox="0 0 820 260" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="820" height="260" fill="white"/>
+    <text x="410" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="#0f1923">Sale Transaction Pipeline</text>
+
+    <rect x="20" y="60" width="140" height="60" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="90" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">Scan / Search Product</text>
+
+    <rect x="190" y="60" width="140" height="60" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+    <text x="260" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">Add to Cart</text>
+
+    <rect x="360" y="60" width="140" height="60" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="430" y="86" text-anchor="middle" font-size="11" font-weight="700" fill="#3730a3">Checkout: Payment</text>
+    <text x="430" y="102" text-anchor="middle" font-size="10" fill="#3730a3">or link Customer</text>
+
+    <rect x="530" y="60" width="140" height="60" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="600" y="86" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">consumeProduct</text>
+    <text x="600" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">Batches() — FIFO</text>
+
+    <rect x="700" y="60" width="100" height="60" rx="8" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+    <text x="750" y="86" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">Save Sale</text>
+    <text x="750" y="102" text-anchor="middle" font-size="10" fill="#991b1b">+ Receipt</text>
+
+    <line x1="160" y1="90" x2="190" y2="90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow4)"/>
+    <line x1="330" y1="90" x2="360" y2="90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow4)"/>
+    <line x1="500" y1="90" x2="530" y2="90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow4)"/>
+    <line x1="670" y1="90" x2="700" y2="90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow4)"/>
+
+    <rect x="130" y="160" width="560" height="80" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="410" y="184" text-anchor="middle" font-size="11" font-weight="700" fill="#0f1923">If customer linked and amount paid &lt; total:</text>
+    <text x="410" y="204" text-anchor="middle" font-size="10" fill="#4b5563">Remaining balance is added to that customer's pending udhar (visible on Customers page)</text>
+    <text x="410" y="222" text-anchor="middle" font-size="10" fill="#4b5563">Stock is deducted immediately via FIFO regardless of payment status</text>
+
+    <defs>
+      <marker id="arrow4" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 Z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+  </svg>
+  <div class="diagram-caption">Every completed sale triggers FIFO batch consumption and, if under-paid with a linked customer, an automatic udhar entry.</div>
+</div>
+
+<div class="card card-purple">
+  <h4>📁 Project Structure</h4>
+  <ul>
+    <li><strong>src/App.tsx:</strong> Root component with page routing (adds 'batches' route)</li>
+    <li><strong>src/pages/:</strong> POSPage, ProductsPage, BatchesPage, InventoryPage, ReportsPage, SettingsPage, CustomersPage, CustomerDetailPage</li>
+    <li><strong>src/components/:</strong> Sidebar navigation with collapsible menu</li>
+    <li><strong>src/store/db.ts:</strong> Core database layer — products, sales, customers, payments, settings, backup/restore</li>
+    <li><strong>src/store/batch-fifo.ts:</strong> FIFO batch engine — addProductBatch, consumeProductBatches, calculateProfitFIFO, getProductBatchSellingPrice</li>
+    <li><strong>electron/main.cjs:</strong> Electron main process (F11 fullscreen, focus fix)</li>
+  </ul>
+</div>
+
+<!-- SECTION 9: TECHNICAL -->
+<div class="page-break"></div>
+<h2 id="tech">§9 Technical Specifications</h2>
+
+<div class="card card-blue">
+  <h4>🏗 Tech Stack</h4>
+  <ul>
+    <li><strong>Frontend:</strong> React 19, TypeScript, Vite 7</li>
+    <li><strong>Styling:</strong> TailwindCSS 4, custom CSS</li>
+    <li><strong>Charts:</strong> Recharts (bar, line, pie charts)</li>
+    <li><strong>Icons:</strong> Lucide React</li>
+    <li><strong>Data:</strong> Browser localStorage (localStorage API)</li>
+    <li><strong>Desktop:</strong> Electron 33 (Windows 10/11)</li>
+    <li><strong>Build:</strong> vite-plugin-singlefile (single HTML output), electron-builder for .exe</li>
+  </ul>
+</div>
+
+<div class="card card-green">
+  <h4>📊 Database Schema (localStorage) — Updated</h4>
+  <table>
+    <tr><th>Key</th><th>Contents</th></tr>
+    <tr><td>pharma_products</td><td>Array of products with name, price, stock, category, unit</td></tr>
+    <tr><td>pharma_categories</td><td>Category list for organization</td></tr>
+    <tr><td>pharma_units</td><td>Unit types (pieces, boxes, strips, etc.)</td></tr>
+    <tr><td>pharma_sales</td><td>Complete transaction history with customer linking</td></tr>
+    <tr><td>pharma_customers</td><td>Customer profiles with contact info &amp; favorites</td></tr>
+    <tr><td>pharma_payments</td><td>Payment and manual debt entries linked to customers</td></tr>
+    <tr><td>pharma_batches</td><td><strong>(New)</strong> Purchase batches — cost, selling price, qty available, expiry, vendor</td></tr>
+    <tr><td>pharma_batch_consumptions</td><td><strong>(New)</strong> Log of every FIFO deduction — batch, qty, cost, sale ID</td></tr>
+    <tr><td>pharma_settings</td><td>User preferences, fonts, toggles, shop info</td></tr>
+  </table>
+  <p style="font-size:12px; color:#94a3b8; font-style:italic;">Note: these are internal localStorage key names carried over from the original codebase — technical identifiers only, unrelated to the Honda POS branding shown throughout the app.</p>
+</div>
+
+<div class="card card-teal">
+  <h4>🧩 Key Batch Interfaces</h4>
+  <table>
+    <tr><th>Interface</th><th>Fields</th></tr>
+    <tr><td>ProductBatch</td><td>id, productId, costPrice, sellingPrice, qty, qtyAvailable, purchaseDate, expiryDate, batchNumber, vendorName, notes, createdAt</td></tr>
+    <tr><td>BatchConsumption</td><td>batchId, productId, qty, costPrice, sellingPrice, saleId, consumedAt</td></tr>
+  </table>
+</div>
+
+<div class="card card-orange">
+  <h4>🎨 UI/UX Design System</h4>
+  <ul>
+    <li><strong>Brand color:</strong> #ef4444 / #22c55e accents depending on module</li>
+    <li><strong>Dark sidebar:</strong> #0f1923 with gray text</li>
+    <li><strong>Page background:</strong> #f8fafc (light gray)</li>
+    <li><strong>Cards:</strong> White with 1px #e2e8f0 border, subtle shadows</li>
+    <li><strong>Icons:</strong> Lucide React (consistent 16-20px sizes)</li>
+    <li><strong>Buttons:</strong> Green for primary (CTA), white for secondary, red for destructive</li>
+    <li><strong>Modals:</strong> Dark overlay (bg-black/50) with backdrop blur</li>
+    <li><strong>Animations:</strong> 200-300ms transitions for smooth interactions</li>
+  </ul>
+</div>
+
+<div class="card card-red">
+  <h4>📦 Build &amp; Deployment</h4>
+  <ul>
+    <li><strong>Development:</strong> <code>npm run electron:dev</code> (Vite dev server + Electron window)</li>
+    <li><strong>Build:</strong> <code>npm run build</code> → single index.html in dist/</li>
+    <li><strong>Desktop installer:</strong> <code>npm run dist</code> → <code>release/Honda POS Setup 1.0.0.exe</code></li>
+    <li><strong>CSP dev warning:</strong> Electron's "Insecure Content-Security-Policy" console warning appears only in development mode — it does not affect the packaged production build</li>
+    <li><strong>Target platform:</strong> Windows 10/11 desktop, offline-first</li>
+    <li><strong>Offline:</strong> 100% offline-first, no internet required</li>
+  </ul>
+</div>
+
+<!-- SUMMARY -->
+<div class="page-break"></div>
+<h2>✨ Complete Feature Summary</h2>
+
+<div class="grid-3">
+  <div class="stat"><div class="number" style="color:#22c55e">8</div><div class="label">Complete Pages</div></div>
+  <div class="stat"><div class="number" style="color:#3b82f6">FIFO</div><div class="label">Batch Costing Engine</div></div>
+  <div class="stat"><div class="number" style="color:#f59e0b">100%</div><div class="label">Offline Capable</div></div>
+</div>
+
+<div class="feature-list">
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Full POS with barcode scanning &amp; real-time search</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Batch-aware pricing pulled from oldest available batch</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">FIFO stock consumption with per-batch cost tracking</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Accurate profit calculated from real batch costs</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Customer credit (Udhar) tracking with formula</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Partial payments &amp; manual debt management</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Complete product CRUD with drag reordering</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Inventory with low-stock alerts &amp; restocking</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Reports: Period filters (daily/weekly/monthly)</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Transaction edit, delete, print, view details</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Print customer statements with full ledger</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Custom fonts &amp; 8 bold toggles for receipts</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Custom credit label (Baqi, Udhar, etc.)</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Full-coverage JSON backup — products, sales, customers, batches</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Cross-device restore with zero data loss</div></div>
+  <div class="feature-item"><div class="icon">✅</div><div class="text">Electron desktop app with .exe installer</div></div>
+</div>
+
+<div class="highlight-box">
+  <h4>🎯 Key Advantages</h4>
+  <ul>
+    <li><strong>No setup required:</strong> Works offline, no database installation needed</li>
+    <li><strong>Real-world costing:</strong> FIFO batches mean profit reports reflect what stock actually cost</li>
+    <li><strong>Low hardware footprint:</strong> ~4GB RAM, any i3 processor, single-file deployment</li>
+    <li><strong>Data safety:</strong> Complete backup/restore in one click, covering every table including customers and batches</li>
+    <li><strong>Professional receipts:</strong> Custom fonts, colors, bold options — matches your branding</li>
+    <li><strong>Modern UI:</strong> Clean design, fast, responsive on any screen size</li>
+    <li><strong>Pakistan-ready:</strong> Support for Urdu-style labels, PKR currency, thermal printers (via Electron)</li>
+  </ul>
+</div>
+
+<div style="text-align:center; margin-top:60px; padding: 40px; background: linear-gradient(135deg, #0f1923, #1a2d3a); border-radius: 20px; color: white;">
+  <div style="font-size:48px; margin-bottom:16px;">🏍️</div>
+  <h2 style="color:white; border:none; margin:0 0 8px;">Honda POS v1.0.12</h2>
+  <p style="color:#94a3b8;">Complete Honda POS System with FIFO Batch Tracking</p>
+  <p style="color:#22c55e; font-weight:600; margin-top:16px;">✅ FIFO Costing • ✅ Customer Credit Tracking • ✅ Full Backup Coverage • ✅ 100% Offline • ✅ Desktop Ready</p>
+</div>
+
+</div>
+</body>
+</html>

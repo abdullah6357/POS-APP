@@ -212,3 +212,8 @@ Save Sale + Receipt
 If customer linked & amount paid < total:
   → Remaining balance added to customer's pending udhar
 ```
+
+
+## 🎥 Demo Video
+
+▶️ [Watch the Demo](DEMO.mp4)

@@ -1,6 +1,6 @@
 # POS Modern Desktop Point of Sale System
 
-> A modern offline desktop Point of Sale (POS) system built for motorcycle parts and service businesses. Designed to simplify sales, inventory management, FIFO stock tracking, customer credit management, reporting, and data backup—all in a fast and intuitive desktop application.
+> A modern offline desktop Point of Sale (POS) system built for service businesses. Designed to simplify sales, inventory management, FIFO stock tracking, customer credit management, reporting, and data backup—all in a fast and intuitive desktop application.
 
 ![Offline](https://img.shields.io/badge/Offline-100%25-success)
 
